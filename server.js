@@ -18,15 +18,31 @@ let db;
 const client = new MongoClient(process.env.MONGODB_URI);
 
 async function connectDB() {
+  // If we already have a connection, reuse it (serverless optimization)
+  if (db) return db;
+
   try {
-    await client.connect();
+    if (!client.topology || !client.topology.isConnected()) {
+      await client.connect();
+    }
     db = client.db(process.env.DB_NAME);
     console.log('✅ Connected to MongoDB successfully');
+    return db;
   } catch (error) {
     console.error('❌ MongoDB connection error:', error);
-    process.exit(1);
+    throw error;
   }
 }
+
+// Ensure DB is connected for every request
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Database connection failed" });
+  }
+});
 
 // API Routes
 app.post('/api/register', async (req, res) => {
@@ -108,16 +124,13 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'Server is running', timestamp: new Date() });
 });
 
-// Start server
-connectDB().then(() => {
+// Start server (Only for local dev)
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
   });
-});
+}
 
-// Graceful shutdown
-process.on('SIGINT', async () => {
-  console.log('\n⏳ Closing MongoDB connection...');
-  await client.close();
-  process.exit(0);
-});
+// Export for Vercel
+module.exports = app;
