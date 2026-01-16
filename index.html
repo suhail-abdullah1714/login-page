@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Secure System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+
+
+    <div class="container">
+        <div class="card">
+            <h2>LOGIN</h2>
+
+            <form onsubmit="return validateForm(event)">
+                <div id="message"></div>
+
+                <div class="input-group">
+                    <label>Username</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="name" required>
+                        <i class="fa-regular fa-user"></i>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" required>
+                        <i class="fa-regular fa-envelope"></i>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" required>
+                        <i class="fa-solid fa-eye-slash toggle-password" id="togglePassword"></i>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">Remember Me</label>
+                    </div>
+                    <a href="#" class="forgot-pass">Forgot <strong>Password?</strong></a>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    Login
+                </button>
+
+                <div class="register-link">
+                    Don't have an Account? <a href="#">Register</a>
+                </div>
+
+                <!-- Hidden name field removed -->
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
